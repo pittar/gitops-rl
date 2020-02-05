@@ -80,6 +80,40 @@ eval $FIND_AND_REPLACE_REPO
 eval $FIND_AND_REPLACE_BRANCH
 echo ""
 
+echo "Adding/Committing/Pushing updated files to the $GIT_REF branch of $GIT_URL"
+git add --all
+git commit -m "Updated routes and git repo urls/branches."
+git push origin $GIT_REF
+echo "Pushed!"
+
+echo "Create config project for cluster configuration."
+oc create -f gitops/projects/config-project.yaml
+echo "Creating security app for security context constraints."
+oc create -f gitops/applications/dc1/cluster-config/security-application.yaml
+echo "Create sealed secrets application."
+oc create -f gitops/applications/dc1/cluster-config/sealedsecrets-application.yaml
+
+echo "Waiting for Bitnami Sealed Secrets controller to start."
+sleep 5
+
+until oc get deployment/sealed-secrets-controller -n openshift-secrets | grep "1/1" >> /dev/null;
+do
+    echo "Waiting..."
+    sleep 3
+done
+echo "Sealed Secrets ready!"
+echo ""
+
+echo "Create dir for Sealed Secrets public key. (~/bitnami)."
+mkdir -p ~/bitnami
+
+echo "Get the public key from the Sealed Secrets secret."
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    oc get secret -o yaml -n openshift-secrets -l sealedsecrets.bitnami.com/sealed-secrets-key | grep tls.crt | cut -d' ' -f6 | base64 -D > ~/bitnami/publickey.pem
+else
+    oc get secret -o yaml -n openshift-secrets -l sealedsecrets.bitnami.com/sealed-secrets-key | grep tls.crt | cut -d' ' -f6 | base64 -d > ~/bitnami/publickey.pem
+fi
+
 echo "Creting Sealed Secrets."
 oc create secret docker-registry quay-cicd-secret --docker-server=quay.io --docker-username="$quayrwuser" --docker-password="$quayrwpass" --docker-email="$quayrwemail" -n cicd -o json --dry-run | kubeseal --cert ~/bitnami/publickey.pem > gitops/resources/cicd/builds/quay-cicd-sealedsecret.json
 oc create secret docker-registry quay-pull-secret --docker-server=quay.io --docker-username="$quayrouser" --docker-password="$quayropass" --docker-email="$quayroemail" -n petclinic-dev -o json --dry-run | kubeseal --cert ~/bitnami/publickey.pem > gitops/resources/products/petclinic/bases/quay-pull-sealedsecret.json
@@ -93,7 +127,7 @@ rm -rf ~/tmp/tmpsecrets
 
 echo "Adding/Committing/Pushing sealed secrets to the $GIT_REF branch of $GIT_URL"
 git add --all
-git commit -m "Updated routes and git repo urls/branches."
+git commit -m "Added secrets."
 git push origin $GIT_REF
 echo "Pushed!"
 
