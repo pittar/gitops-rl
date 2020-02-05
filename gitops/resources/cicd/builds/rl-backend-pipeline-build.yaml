@@ -1,0 +1,41 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    app: demo-app-build
+    name: rl-backend
+  name: rl-backend
+  namespace: cicd
+spec:
+  failedBuildsHistoryLimit: 5
+  nodeSelector: null
+  output: {}
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    git:
+      ref: master
+      uri: https://bitbucket.org/ietsinnovate/spring-boot-hw.git
+    type: Git
+  strategy:
+    jenkinsPipelineStrategy:
+      env:
+      - name: APP_NAME
+        value: rl-backend
+      - name: GIT_SOURCE_URL
+        value: https://bitbucket.org/ietsinnovate/spring-boot-hw.git
+      - name: GIT_SOURCE_REF
+        value: master
+      jenkinsfilePath: Jenkinsfile
+    type: JenkinsPipeline
+  successfulBuildsHistoryLimit: 5
+  triggers:
+  - github:
+      secret: 2eKTeARyFi4JVI2NOIdRoxB8f6fcbnIAkjnfwFyc
+    type: GitHub
+  - generic:
+      secret: bXUuXs5n6fdMOMmSSIjolmwDSKcyihd6hUfB5GQ7
+    type: Generic
+status:
+  lastVersion: 0
