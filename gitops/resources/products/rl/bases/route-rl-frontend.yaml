@@ -9,7 +9,6 @@ metadata:
     app.kubernetes.io/part-of: rl-frontend-app
     app.openshift.io/runtime: ""
   name: rl-frontend
-  namespace: rl-dev
 spec:
   host: rl-frontend-rl-dev.apps.cluster-cra-016e.cra-016e.example.opentlc.com
   port:
