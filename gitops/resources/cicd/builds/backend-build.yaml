@@ -3,7 +3,7 @@ kind: BuildConfig
 metadata:
   labels:
     app: backend-build
-  name: backend-build
+  name: rl-backend-build
   namespace: cicd
 spec:
   failedBuildsHistoryLimit: 5
