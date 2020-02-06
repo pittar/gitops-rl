@@ -1,0 +1,1 @@
+{"op": "replace", "path": "/spec/triggers/0/imageChangeParams/from/name", "value": "rl-backend:uat"}
