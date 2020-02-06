@@ -11,7 +11,7 @@ spec:
   output:
     to:
       kind: ImageStreamTag
-      name: 'backend:latest'
+      name: 'rl-backend:latest'
   postCommit: {}
   resources: {}
   runPolicy: Serial

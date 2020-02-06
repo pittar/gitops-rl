@@ -12,7 +12,7 @@ spec:
   output:
     to:
       kind: ImageStreamTag
-      name: 'angular-app:latest'
+      name: 'rl-frontend:latest'
   postCommit: {}
   resources: {}
   runPolicy: Serial
