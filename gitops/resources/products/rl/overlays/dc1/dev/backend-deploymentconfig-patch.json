@@ -1,3 +1,3 @@
 [
-    {"op": "replace", "path": "/spec/triggers/0/imageChangeParams/from/name", "value": "rl-backend:dev"}
+    {"op": "replace", "path": "/spec/triggers/imageChangeParams/from/name", "value": "rl-backend:dev"}
 ]
