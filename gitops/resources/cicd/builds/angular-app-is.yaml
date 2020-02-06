@@ -3,7 +3,7 @@ kind: ImageStream
 metadata:
   labels:
     app: angular-app
-  name: angluar-app
+  name: angular-app
   namespace: cicd
 spec:
   lookupPolicy:
