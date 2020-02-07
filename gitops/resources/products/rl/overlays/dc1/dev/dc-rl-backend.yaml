@@ -5,7 +5,7 @@ metadata:
     app: rl-backend
     app.kubernetes.io/component: rl-backend
     app.kubernetes.io/instance: rl-backend
-    app.kubernetes.io/part-of: rl-backend-app
+    app.kubernetes.io/part-of: rl-app
   name: rl-backend
   namespace: rl-dev
 spec:
